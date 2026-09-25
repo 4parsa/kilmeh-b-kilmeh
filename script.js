@@ -47,11 +47,36 @@ const words = [
 ];
 
 const list = document.getElementById("word-list");
+const form = document.getElementById("add-form");
 
-list.innerHTML = words.map(word => `
-  <div class="word-card">
-    <h2>${word.english}</h2>
-    <p lang="ar" dir="rtl">${word.arabic}</p>
-    <p>${word.translit}</p>
-  </div>
-`).join("");
+function renderWords() {
+  list.innerHTML = words.map(word => `
+    <div class="word-card">
+      <h2>${word.english}</h2>
+      <p lang="ar" dir="rtl">${word.arabic}</p>
+      <p>${word.translit}</p>
+    </div>
+  `).join("");
+}
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const newWord = {
+    id: "w_" + Date.now(),
+    type: document.getElementById("type").value,
+    english: document.getElementById("english").value,
+    arabic: document.getElementById("arabic").value,
+    translit: document.getElementById("translit").value,
+    forms: {},
+    notes: "",
+    tags: [],
+    createdAt: new Date().toISOString()
+  };
+
+  words.unshift(newWord);
+  renderWords();
+  form.reset();
+});
+
+renderWords();

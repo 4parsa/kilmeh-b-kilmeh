@@ -9,6 +9,25 @@
   <h1 lang="ar" dir="rtl">كلمة بكلمة</h1>
   <p>Kilmeh b Kilmeh: my Lebanese Arabic dictionary</p>
 
+  <form id="add-form">
+    <input id="english" placeholder="English" required>
+    <input id="arabic" placeholder="Arabic" lang="ar" dir="rtl" required>
+    <input id="translit" placeholder="Transliteration" required>
+    <select id="type">
+      <option value="noun">Noun</option>
+      <option value="verb">Verb</option>
+      <option value="adjective">Adjective</option>
+      <option value="adverb">Adverb</option>
+      <option value="preposition">Preposition</option>
+      <option value="pronoun">Pronoun</option>
+      <option value="number">Number</option>
+      <option value="question">Question word</option>
+      <option value="conjunction">Conjunction</option>
+      <option value="phrase">Phrase</option>
+    </select>
+    <button type="submit">Add word</button>
+  </form>
+
   <div id="word-list"></div>
 
   <script src="script.js"></script>
