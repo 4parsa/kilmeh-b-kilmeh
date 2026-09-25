@@ -14,4 +14,12 @@ const word = {
   createdAt: "2026-09-25T19:35:00Z"
 };
 
-console.log(word);
+const list = document.getElementById("word-list");
+
+list.innerHTML = `
+  <div class="word-card">
+    <h2>${word.english}</h2>
+    <p lang="ar" dir="rtl">${word.arabic}</p>
+    <p>${word.translit}</p>
+  </div>
+`;
