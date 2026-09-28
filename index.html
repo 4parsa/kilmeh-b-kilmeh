@@ -4,35 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>كلمة بكلمة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-  <h1 lang="ar" dir="rtl">كلمة بكلمة</h1>
-  <p>Kilmeh b Kilmeh: my Lebanese Arabic dictionary</p>
+  <header class="site-header">
+    <h1 lang="ar" dir="rtl">كلمة بكلمة</h1>
+  </header>
 
-  <form id="add-form">
-    <input id="english" placeholder="English" required>
-    <input id="arabic" placeholder="Arabic" lang="ar" dir="rtl" required>
-    <input id="translit" placeholder="Transliteration" required>
-    <select id="type">
-      <option value="noun">Noun</option>
-      <option value="verb">Verb</option>
-      <option value="adjective">Adjective</option>
-      <option value="adverb">Adverb</option>
-      <option value="preposition">Preposition</option>
-      <option value="pronoun">Pronoun</option>
-      <option value="number">Number</option>
-      <option value="question">Question word</option>
-      <option value="conjunction">Conjunction</option>
-      <option value="phrase">Phrase</option>
-    </select>
-    <button type="submit" id="submit-btn">Add word</button>
-    <button type="button" id="cancel-edit" hidden>Cancel</button>
-  </form>
+  <nav class="site-nav">
+    <button id="lesson-mode" class="nav-btn" disabled>Lesson Mode</button>
+    <button id="open-add" class="nav-btn">Add word</button>
+  </nav>
 
-  <input id="search" type="search" placeholder="Search English, Arabic or transliteration">
+  <main>
+    <input id="search" type="search" placeholder="Search…">
+    <div id="word-list"></div>
+  </main>
 
-  <div id="word-list"></div>
+  <dialog id="word-dialog">
+    <form id="add-form">
+      <h2 id="dialog-title">Add word</h2>
+      <input id="english" placeholder="English" required>
+      <input id="arabic" placeholder="Arabic" lang="ar" dir="rtl" required>
+      <input id="translit" placeholder="Transliteration" required>
+      <select id="type">
+        <option value="noun">Noun</option>
+        <option value="verb">Verb</option>
+        <option value="adjective">Adjective</option>
+        <option value="adverb">Adverb</option>
+        <option value="preposition">Preposition</option>
+        <option value="pronoun">Pronoun</option>
+        <option value="number">Number</option>
+        <option value="question">Question word</option>
+        <option value="conjunction">Conjunction</option>
+        <option value="phrase">Phrase</option>
+        <option value="sentence">Sentence</option>
+      </select>
+      <div class="dialog-buttons">
+        <button type="button" id="cancel-edit">Cancel</button>
+        <button type="submit" id="submit-btn">Add word</button>
+      </div>
+    </form>
+  </dialog>
 
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=9"></script>
 </body>
 </html>

@@ -51,8 +51,31 @@ const form = document.getElementById("add-form");
 const searchInput = document.getElementById("search");
 const submitBtn = document.getElementById("submit-btn");
 const cancelBtn = document.getElementById("cancel-edit");
+const dialog = document.getElementById("word-dialog");
+const dialogTitle = document.getElementById("dialog-title");
+const openAddBtn = document.getElementById("open-add");
 
 let editingId = null;
+
+const formLabels = {
+  dual: "Dual",
+  soundPlural: "Sound plural",
+  brokenPlural: "Broken plural"
+};
+
+function renderForms(forms) {
+  const rows = Object.entries(forms || {})
+    .filter(([key, value]) => value)
+    .map(([key, value]) => `
+      <li>
+        <span class="form-label">${formLabels[key] || key}</span>
+        <span class="form-translit">${value.translit}</span>
+        <span class="form-arabic" lang="ar" dir="rtl">${value.arabic}</span>
+      </li>
+    `).join("");
+
+  return rows ? `<ul class="forms">${rows}</ul>` : "";
+}
 
 function renderWords() {
   const query = searchInput.value.trim().toLowerCase();
@@ -70,11 +93,19 @@ function renderWords() {
 
   list.innerHTML = shown.map(word => `
     <div class="word-card">
-      <h2>${word.english}</h2>
-      <p lang="ar" dir="rtl">${word.arabic}</p>
-      <p>${word.translit}</p>
-      <button class="edit-btn" data-id="${word.id}">Edit</button>
-      <button class="delete-btn" data-id="${word.id}">Delete</button>
+      <div class="word-top">
+        <div>
+          <h2>${word.english}</h2>
+          <p class="translit">${word.translit}</p>
+        </div>
+        <p class="arabic" lang="ar" dir="rtl">${word.arabic}</p>
+      </div>
+      ${renderForms(word.forms)}
+      <p class="type">${word.type}</p>
+      <div class="card-actions">
+        <button class="edit-btn" data-id="${word.id}">Edit</button>
+        <button class="delete-btn" data-id="${word.id}">Delete</button>
+      </div>
     </div>
   `).join("");
 }
@@ -83,11 +114,25 @@ function saveWords() {
   localStorage.setItem("words", JSON.stringify(words));
 }
 
-function stopEditing() {
+function openAdd() {
   editingId = null;
   form.reset();
+  dialogTitle.textContent = "Add word";
   submitBtn.textContent = "Add word";
-  cancelBtn.hidden = true;
+  dialog.showModal();
+}
+
+function openEdit(id) {
+  const word = words.find(word => word.id === id);
+  document.getElementById("english").value = word.english;
+  document.getElementById("arabic").value = word.arabic;
+  document.getElementById("translit").value = word.translit;
+  document.getElementById("type").value = word.type;
+
+  editingId = id;
+  dialogTitle.textContent = "Edit word";
+  submitBtn.textContent = "Save changes";
+  dialog.showModal();
 }
 
 form.addEventListener("submit", (event) => {
@@ -117,7 +162,7 @@ form.addEventListener("submit", (event) => {
 
   saveWords();
   renderWords();
-  stopEditing();
+  dialog.close();
 });
 
 list.addEventListener("click", (event) => {
@@ -126,26 +171,17 @@ list.addEventListener("click", (event) => {
   if (event.target.classList.contains("delete-btn")) {
     if (!confirm("Delete this word?")) return;
     words = words.filter(word => word.id !== id);
-    if (editingId === id) stopEditing();
     saveWords();
     renderWords();
   }
 
   if (event.target.classList.contains("edit-btn")) {
-    const word = words.find(word => word.id === id);
-    document.getElementById("english").value = word.english;
-    document.getElementById("arabic").value = word.arabic;
-    document.getElementById("translit").value = word.translit;
-    document.getElementById("type").value = word.type;
-
-    editingId = id;
-    submitBtn.textContent = "Save changes";
-    cancelBtn.hidden = false;
-    form.scrollIntoView({ behavior: "smooth" });
+    openEdit(id);
   }
 });
 
-cancelBtn.addEventListener("click", stopEditing);
+openAddBtn.addEventListener("click", openAdd);
+cancelBtn.addEventListener("click", () => dialog.close());
 searchInput.addEventListener("input", renderWords);
 
 renderWords();
