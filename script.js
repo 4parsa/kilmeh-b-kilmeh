@@ -1,4 +1,4 @@
-const words = [
+let words = JSON.parse(localStorage.getItem("words")) || [
   {
     id: "w_1",
     type: "noun",
@@ -59,6 +59,10 @@ function renderWords() {
   `).join("");
 }
 
+function saveWords() {
+  localStorage.setItem("words", JSON.stringify(words));
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -75,6 +79,7 @@ form.addEventListener("submit", (event) => {
   };
 
   words.unshift(newWord);
+  saveWords();
   renderWords();
   form.reset();
 });
