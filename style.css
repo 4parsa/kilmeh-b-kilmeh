@@ -214,3 +214,51 @@ dialog h2 {
   background: var(--ink);
   color: var(--paper);
 }
+
+/* Hidden things stay hidden, even if they have display: flex */
+[hidden] { display: none !important; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 12px;
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+.tab {
+  flex: 1;
+  padding: 10px 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.tab.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Filters inside Words */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.filter {
+  padding: 4px 12px;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  background: none;
+  color: var(--muted);
+  border: 1px solid #bbb;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.filter.active {
+  color: var(--ink);
+  border-color: var(--ink);
+}

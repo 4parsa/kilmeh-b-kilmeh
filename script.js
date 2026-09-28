@@ -54,14 +54,24 @@ const cancelBtn = document.getElementById("cancel-edit");
 const dialog = document.getElementById("word-dialog");
 const dialogTitle = document.getElementById("dialog-title");
 const openAddBtn = document.getElementById("open-add");
+const tabsBox = document.getElementById("tabs");
+const filtersBox = document.getElementById("filters");
 
 let editingId = null;
+let currentTab = "words";
+let currentFilter = "all";
 
 const formLabels = {
   dual: "Dual",
   soundPlural: "Sound plural",
   brokenPlural: "Broken plural"
 };
+
+function getCategory(type) {
+  if (type === "phrase") return "phrases";
+  if (type === "sentence") return "sentences";
+  return "words";
+}
 
 function renderForms(forms) {
   const rows = Object.entries(forms || {})
@@ -79,15 +89,33 @@ function renderForms(forms) {
 
 function renderWords() {
   const query = searchInput.value.trim().toLowerCase();
+  let shown;
 
-  const shown = words.filter(word =>
-    word.english.toLowerCase().includes(query) ||
-    word.arabic.includes(query) ||
-    word.translit.toLowerCase().includes(query)
-  );
+  if (query) {
+    shown = words.filter(word =>
+      word.english.toLowerCase().includes(query) ||
+      word.arabic.includes(query) ||
+      word.translit.toLowerCase().includes(query)
+    );
+  } else {
+    shown = words.filter(word => getCategory(word.type) === currentTab);
+
+    if (currentTab === "words" && currentFilter !== "all") {
+      shown = shown.filter(word =>
+        currentFilter === "other"
+          ? !["noun", "verb", "adjective"].includes(word.type)
+          : word.type === currentFilter
+      );
+    }
+  }
+
+  tabsBox.hidden = query !== "";
+  filtersBox.hidden = query !== "" || currentTab !== "words";
 
   if (shown.length === 0) {
-    list.innerHTML = "<p>No words found.</p>";
+    list.innerHTML = query
+      ? "<p>No results.</p>"
+      : `<p>No ${currentTab} yet.</p>`;
     return;
   }
 
@@ -178,6 +206,28 @@ list.addEventListener("click", (event) => {
   if (event.target.classList.contains("edit-btn")) {
     openEdit(id);
   }
+});
+
+tabsBox.addEventListener("click", (event) => {
+  const tab = event.target.dataset.tab;
+  if (!tab) return;
+
+  currentTab = tab;
+  document.querySelectorAll(".tab").forEach(btn =>
+    btn.classList.toggle("active", btn.dataset.tab === tab)
+  );
+  renderWords();
+});
+
+filtersBox.addEventListener("click", (event) => {
+  const filter = event.target.dataset.filter;
+  if (!filter) return;
+
+  currentFilter = filter;
+  document.querySelectorAll(".filter").forEach(btn =>
+    btn.classList.toggle("active", btn.dataset.filter === filter)
+  );
+  renderWords();
 });
 
 openAddBtn.addEventListener("click", openAdd);
