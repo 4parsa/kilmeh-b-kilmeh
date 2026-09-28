@@ -48,9 +48,23 @@ let words = JSON.parse(localStorage.getItem("words")) || [
 
 const list = document.getElementById("word-list");
 const form = document.getElementById("add-form");
+const searchInput = document.getElementById("search");
 
 function renderWords() {
-  list.innerHTML = words.map(word => `
+  const query = searchInput.value.trim().toLowerCase();
+
+  const shown = words.filter(word =>
+    word.english.toLowerCase().includes(query) ||
+    word.arabic.includes(query) ||
+    word.translit.toLowerCase().includes(query)
+  );
+
+  if (shown.length === 0) {
+    list.innerHTML = "<p>No words found.</p>";
+    return;
+  }
+
+  list.innerHTML = shown.map(word => `
     <div class="word-card">
       <h2>${word.english}</h2>
       <p lang="ar" dir="rtl">${word.arabic}</p>
@@ -95,5 +109,7 @@ list.addEventListener("click", (event) => {
   saveWords();
   renderWords();
 });
+
+searchInput.addEventListener("input", renderWords);
 
 renderWords();
