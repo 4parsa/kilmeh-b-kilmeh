@@ -55,6 +55,7 @@ function renderWords() {
       <h2>${word.english}</h2>
       <p lang="ar" dir="rtl">${word.arabic}</p>
       <p>${word.translit}</p>
+      <button class="delete-btn" data-id="${word.id}">Delete</button>
     </div>
   `).join("");
 }
@@ -82,6 +83,17 @@ form.addEventListener("submit", (event) => {
   saveWords();
   renderWords();
   form.reset();
+});
+
+list.addEventListener("click", (event) => {
+  if (!event.target.classList.contains("delete-btn")) return;
+
+  if (!confirm("Delete this word?")) return;
+
+  const id = event.target.dataset.id;
+  words = words.filter(word => word.id !== id);
+  saveWords();
+  renderWords();
 });
 
 renderWords();
