@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <header class="site-header">
@@ -39,6 +39,11 @@
         <option value="sentence">Sentence</option>
       </select>
       <button type="submit">Add to lesson</button>
+
+      <details id="l-more" class="lesson-more">
+        <summary>More forms (optional)</summary>
+        <div id="l-extra-fields"></div>
+      </details>
     </form>
 
     <h2 id="lesson-count">This lesson</h2>
@@ -50,7 +55,8 @@
     </div>
   </main>
 
-  <script src="js/storage.js?v=1"></script>
-  <script src="js/lesson.js?v=2"></script>
+  <script src="js/storage.js?v=2"></script>
+  <script src="js/shared.js?v=2"></script>
+  <script src="js/lesson.js?v=3"></script>
 </body>
 </html>
