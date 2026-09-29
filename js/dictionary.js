@@ -17,72 +17,6 @@ let editingId = null;
 let currentTab = "words";
 let currentFilter = "all";
 
-const formLabels = {
-  dual: "Dual",
-  soundPlural: "Sound plural",
-  brokenPlural: "Broken plural",
-  past: "Past (huwwe)",
-  present: "Present (huwwe)",
-  command: "Command (inta)",
-  feminine: "Feminine",
-  plural: "Plural"
-};
-
-const formsByType = {
-  noun: ["dual", "soundPlural", "brokenPlural"],
-  verb: ["past", "present", "command"],
-  adjective: ["feminine", "plural"]
-};
-
-function getCategory(type) {
-  if (type === "phrase") return "phrases";
-  if (type === "sentence") return "sentences";
-  return "words";
-}
-
-function renderForms(forms) {
-  const rows = Object.entries(forms || {})
-    .filter(([key, value]) => value)
-    .map(([key, value]) => `
-      <li>
-        <span class="form-label">${formLabels[key] || key}</span>
-        <span class="form-translit">${value.translit}</span>
-        <span class="form-arabic" lang="ar" dir="rtl">${value.arabic}</span>
-      </li>
-    `).join("");
-
-  return rows ? `<ul class="forms">${rows}</ul>` : "";
-}
-
-function renderExtraFields(type, forms = {}) {
-  const keys = formsByType[type] || [];
-
-  extraFields.innerHTML = keys.map(key => `
-    <fieldset class="extra-field">
-      <legend>${formLabels[key]}</legend>
-      <div class="pair">
-        <input data-form="${key}" data-part="arabic" placeholder="Arabic"
-               lang="ar" dir="rtl" value="${forms[key]?.arabic || ""}">
-        <input data-form="${key}" data-part="translit" placeholder="Transliteration"
-               value="${forms[key]?.translit || ""}">
-      </div>
-    </fieldset>
-  `).join("");
-}
-
-function readExtraFields() {
-  const forms = {};
-  const keys = formsByType[typeSelect.value] || [];
-
-  keys.forEach(key => {
-    const arabic = extraFields.querySelector(`[data-form="${key}"][data-part="arabic"]`).value.trim();
-    const translit = extraFields.querySelector(`[data-form="${key}"][data-part="translit"]`).value.trim();
-    forms[key] = (arabic || translit) ? { arabic, translit } : null;
-  });
-
-  return forms;
-}
-
 function renderWords() {
   const query = searchInput.value.trim().toLowerCase();
   let shown;
@@ -140,7 +74,7 @@ function renderWords() {
 function openAdd() {
   editingId = null;
   form.reset();
-  renderExtraFields(typeSelect.value);
+  renderExtraFields(extraFields, typeSelect.value);
   dialogTitle.textContent = "Add word";
   submitBtn.textContent = "Add word";
   dialog.showModal();
@@ -153,7 +87,7 @@ function openEdit(id) {
   document.getElementById("translit").value = word.translit;
   typeSelect.value = word.type;
   notesInput.value = word.notes || "";
-  renderExtraFields(word.type, word.forms);
+  renderExtraFields(extraFields, word.type, word.forms);
 
   editingId = id;
   dialogTitle.textContent = "Edit word";
@@ -169,7 +103,7 @@ form.addEventListener("submit", (event) => {
     english: document.getElementById("english").value.trim(),
     arabic: document.getElementById("arabic").value.trim(),
     translit: document.getElementById("translit").value.trim(),
-    forms: readExtraFields(),
+    forms: readExtraFields(extraFields, typeSelect.value),
     notes: notesInput.value.trim()
   };
 
@@ -228,7 +162,7 @@ filtersBox.addEventListener("click", (event) => {
   renderWords();
 });
 
-typeSelect.addEventListener("change", () => renderExtraFields(typeSelect.value));
+typeSelect.addEventListener("change", () => renderExtraFields(extraFields, typeSelect.value));
 openAddBtn.addEventListener("click", openAdd);
 cancelBtn.addEventListener("click", () => dialog.close());
 searchInput.addEventListener("input", renderWords);

@@ -4,6 +4,8 @@ const lessonEnglish = document.getElementById("l-english");
 const lessonArabic = document.getElementById("l-arabic");
 const lessonTranslit = document.getElementById("l-translit");
 const lessonType = document.getElementById("l-type");
+const lessonExtra = document.getElementById("l-extra-fields");
+const lessonMore = document.getElementById("l-more");
 const lessonCount = document.getElementById("lesson-count");
 const lessonList = document.getElementById("lesson-list");
 const saveLessonBtn = document.getElementById("save-lesson");
@@ -31,6 +33,7 @@ function renderLesson() {
         <span class="type">${item.type}</span>
       </div>
       <span class="arabic" lang="ar" dir="rtl">${item.arabic}</span>
+      ${renderForms(item.forms)}
       <div class="card-actions">
         <button class="lesson-edit-btn" data-id="${item.id}">Edit</button>
         <button class="lesson-remove-btn delete-btn" data-id="${item.id}">Remove</button>
@@ -44,6 +47,11 @@ lessonNameInput.addEventListener("input", () => {
   saveLesson();
 });
 
+// swap the extra boxes when the type changes
+lessonType.addEventListener("change", () => {
+  renderExtraFields(lessonExtra, lessonType.value);
+});
+
 lessonForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -52,7 +60,8 @@ lessonForm.addEventListener("submit", (event) => {
     type: lessonType.value,
     english: lessonEnglish.value.trim(),
     arabic: lessonArabic.value.trim(),
-    translit: lessonTranslit.value.trim()
+    translit: lessonTranslit.value.trim(),
+    forms: readExtraFields(lessonExtra, lessonType.value)
   });
 
   saveLesson();
@@ -61,6 +70,7 @@ lessonForm.addEventListener("submit", (event) => {
   const keepType = lessonType.value;
   lessonForm.reset();
   lessonType.value = keepType;
+  renderExtraFields(lessonExtra, keepType);
   lessonEnglish.focus();
 });
 
@@ -78,6 +88,10 @@ lessonList.addEventListener("click", (event) => {
     lessonArabic.value = item.arabic;
     lessonTranslit.value = item.translit;
     lessonType.value = item.type;
+    renderExtraFields(lessonExtra, item.type, item.forms);
+
+    // open "More forms" if the item has any filled in
+    lessonMore.open = Object.values(item.forms || {}).some(value => value);
     lessonEnglish.focus();
   }
 
@@ -95,7 +109,7 @@ saveLessonBtn.addEventListener("click", () => {
 
   const newWords = lesson.items.map(item => ({
     ...item,
-    forms: {},
+    forms: item.forms || {},
     notes: "",
     tags: [name],
     createdAt: now
@@ -124,5 +138,6 @@ if (!lesson) {
 }
 
 lessonNameInput.value = lesson.name;
+renderExtraFields(lessonExtra, lessonType.value);
 renderLesson();
 lessonEnglish.focus();
