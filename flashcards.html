@@ -7,9 +7,55 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
   <header class="site-header">
     <h1 lang="ar" dir="rtl">كلمة بكلمة</h1>
   </header>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-btn">Back to dictionary</a>
+  </nav>
+
+  <main>
+    <section id="fc-setup" class="fc-setup">
+      <h2 class="fc-title">Flashcards</h2>
+
+      <label class="fc-label" for="fc-set">Practise</label>
+      <select id="fc-set" class="fc-select"></select>
+
+      <p class="fc-label">Direction</p>
+      <div id="fc-direction" class="tabs">
+        <button class="tab active" data-direction="en-ar">English → Arabic</button>
+        <button class="tab" data-direction="ar-en">Arabic → English</button>
+      </div>
+
+      <button id="fc-start" class="fc-primary">Start</button>
+    </section>
+
+    <section id="fc-play" hidden>
+      <p id="fc-progress" class="fc-progress"></p>
+      <div id="fc-card" class="fc-card" role="button" tabindex="0"></div>
+      <div id="fc-answer" class="fc-answer" hidden>
+        <button id="fc-again" class="fc-secondary">Again</button>
+        <button id="fc-got" class="fc-primary">Got it</button>
+      </div>
+      <button id="fc-quit" class="fc-link">End session</button>
+    </section>
+
+    <section id="fc-summary" hidden>
+      <h2 class="fc-title">Done!</h2>
+      <p id="fc-result" class="fc-result"></p>
+      <div class="fc-answer">
+        <button id="fc-change" class="fc-secondary">Change set</button>
+        <button id="fc-restart" class="fc-primary">Go again</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/storage.js?v=2"></script>
+  <script src="js/shared.js?v=3"></script>
+  <script src="js/flashcards.js?v=1"></script>
+</body>
+</html>

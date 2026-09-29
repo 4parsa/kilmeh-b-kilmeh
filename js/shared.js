@@ -1,4 +1,4 @@
-// used by the dictionary and lessons pages
+// used by the dictionary, flashcards and lessons pages
 
 const formLabels = {
   dual: "Dual",

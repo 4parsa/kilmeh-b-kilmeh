@@ -398,3 +398,124 @@ dialog h2 {
   width: 100%;
   margin-top: 0;
 }
+
+/* Flashcards */
+.fc-setup { max-width: 420px; }
+.fc-title {
+  margin: 0 0 16px;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+.fc-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.fc-select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px 12px;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+.fc-primary,
+.fc-secondary {
+  padding: 12px 24px;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.fc-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.fc-secondary {
+  background: var(--paper);
+  color: var(--ink);
+}
+.fc-setup .fc-primary {
+  width: 100%;
+  margin-top: 8px;
+}
+
+#fc-play,
+#fc-summary {
+  max-width: 520px;
+  margin: 0 auto;
+}
+#fc-summary { text-align: center; }
+
+.fc-progress {
+  margin: 0 0 12px;
+  text-align: center;
+  color: var(--muted);
+}
+.fc-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
+  padding: 32px 24px;
+  border: 1px solid var(--line);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+.fc-english {
+  margin: 0;
+  font-size: 2rem;
+}
+.fc-arabic {
+  margin: 0;
+  font-size: 2.6rem;
+  line-height: 1.4;
+}
+.fc-translit {
+  margin: 4px 0 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--muted);
+}
+.fc-hint {
+  margin: 24px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.fc-card hr {
+  width: 40%;
+  margin: 20px auto;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+.fc-card .forms { text-align: left; }
+
+.fc-answer {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.fc-answer button { flex: 1; }
+
+.fc-link {
+  display: block;
+  margin: 24px auto 0;
+  background: none;
+  border: none;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.fc-result {
+  margin: 0 0 16px;
+  font-size: 1.3rem;
+}
