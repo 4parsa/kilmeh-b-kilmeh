@@ -1,51 +1,3 @@
-let words = JSON.parse(localStorage.getItem("words")) || [
-  {
-    id: "w_1",
-    type: "noun",
-    english: "book",
-    arabic: "كتاب",
-    translit: "ktaab",
-    forms: {
-      dual:         { arabic: "كتابين", translit: "ktaabein" },
-      soundPlural:  null,
-      brokenPlural: { arabic: "كتب",   translit: "kitob" }
-    },
-    notes: "",
-    tags: ["school", "objects"],
-    createdAt: "2026-09-25T19:35:00Z"
-  },
-  {
-    id: "w_2",
-    type: "noun",
-    english: "house",
-    arabic: "بيت",
-    translit: "beit",
-    forms: {
-      dual:         { arabic: "بيتين", translit: "beitein" },
-      soundPlural:  null,
-      brokenPlural: { arabic: "بيوت", translit: "byoot" }
-    },
-    notes: "",
-    tags: ["home", "places"],
-    createdAt: "2026-09-25T19:36:00Z"
-  },
-  {
-    id: "w_3",
-    type: "noun",
-    english: "girl / daughter",
-    arabic: "بنت",
-    translit: "bint",
-    forms: {
-      dual:         { arabic: "بنتين", translit: "bintein" },
-      soundPlural:  { arabic: "بنات", translit: "banaat" },
-      brokenPlural: null
-    },
-    notes: "",
-    tags: ["people", "family"],
-    createdAt: "2026-09-25T19:37:00Z"
-  }
-];
-
 const list = document.getElementById("word-list");
 const form = document.getElementById("add-form");
 const searchInput = document.getElementById("search");
@@ -56,6 +8,10 @@ const dialogTitle = document.getElementById("dialog-title");
 const openAddBtn = document.getElementById("open-add");
 const tabsBox = document.getElementById("tabs");
 const filtersBox = document.getElementById("filters");
+const typeSelect = document.getElementById("type");
+const extraFields = document.getElementById("extra-fields");
+const notesInput = document.getElementById("notes");
+const lessonLink = document.getElementById("lesson-link");
 
 let editingId = null;
 let currentTab = "words";
@@ -64,7 +20,18 @@ let currentFilter = "all";
 const formLabels = {
   dual: "Dual",
   soundPlural: "Sound plural",
-  brokenPlural: "Broken plural"
+  brokenPlural: "Broken plural",
+  past: "Past (huwwe)",
+  present: "Present (huwwe)",
+  command: "Command (inta)",
+  feminine: "Feminine",
+  plural: "Plural"
+};
+
+const formsByType = {
+  noun: ["dual", "soundPlural", "brokenPlural"],
+  verb: ["past", "present", "command"],
+  adjective: ["feminine", "plural"]
 };
 
 function getCategory(type) {
@@ -87,6 +54,35 @@ function renderForms(forms) {
   return rows ? `<ul class="forms">${rows}</ul>` : "";
 }
 
+function renderExtraFields(type, forms = {}) {
+  const keys = formsByType[type] || [];
+
+  extraFields.innerHTML = keys.map(key => `
+    <fieldset class="extra-field">
+      <legend>${formLabels[key]}</legend>
+      <div class="pair">
+        <input data-form="${key}" data-part="arabic" placeholder="Arabic"
+               lang="ar" dir="rtl" value="${forms[key]?.arabic || ""}">
+        <input data-form="${key}" data-part="translit" placeholder="Transliteration"
+               value="${forms[key]?.translit || ""}">
+      </div>
+    </fieldset>
+  `).join("");
+}
+
+function readExtraFields() {
+  const forms = {};
+  const keys = formsByType[typeSelect.value] || [];
+
+  keys.forEach(key => {
+    const arabic = extraFields.querySelector(`[data-form="${key}"][data-part="arabic"]`).value.trim();
+    const translit = extraFields.querySelector(`[data-form="${key}"][data-part="translit"]`).value.trim();
+    forms[key] = (arabic || translit) ? { arabic, translit } : null;
+  });
+
+  return forms;
+}
+
 function renderWords() {
   const query = searchInput.value.trim().toLowerCase();
   let shown;
@@ -95,7 +91,8 @@ function renderWords() {
     shown = words.filter(word =>
       word.english.toLowerCase().includes(query) ||
       word.arabic.includes(query) ||
-      word.translit.toLowerCase().includes(query)
+      word.translit.toLowerCase().includes(query) ||
+      (word.tags || []).some(tag => tag.toLowerCase().includes(query))
     );
   } else {
     shown = words.filter(word => getCategory(word.type) === currentTab);
@@ -129,7 +126,9 @@ function renderWords() {
         <p class="arabic" lang="ar" dir="rtl">${word.arabic}</p>
       </div>
       ${renderForms(word.forms)}
+      ${word.notes ? `<p class="notes">${word.notes}</p>` : ""}
       <p class="type">${word.type}</p>
+      ${word.tags?.length ? `<p class="tags">${word.tags.join(" · ")}</p>` : ""}
       <div class="card-actions">
         <button class="edit-btn" data-id="${word.id}">Edit</button>
         <button class="delete-btn" data-id="${word.id}">Delete</button>
@@ -138,13 +137,10 @@ function renderWords() {
   `).join("");
 }
 
-function saveWords() {
-  localStorage.setItem("words", JSON.stringify(words));
-}
-
 function openAdd() {
   editingId = null;
   form.reset();
+  renderExtraFields(typeSelect.value);
   dialogTitle.textContent = "Add word";
   submitBtn.textContent = "Add word";
   dialog.showModal();
@@ -155,7 +151,9 @@ function openEdit(id) {
   document.getElementById("english").value = word.english;
   document.getElementById("arabic").value = word.arabic;
   document.getElementById("translit").value = word.translit;
-  document.getElementById("type").value = word.type;
+  typeSelect.value = word.type;
+  notesInput.value = word.notes || "";
+  renderExtraFields(word.type, word.forms);
 
   editingId = id;
   dialogTitle.textContent = "Edit word";
@@ -167,10 +165,12 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const formData = {
-    type: document.getElementById("type").value,
-    english: document.getElementById("english").value,
-    arabic: document.getElementById("arabic").value,
-    translit: document.getElementById("translit").value
+    type: typeSelect.value,
+    english: document.getElementById("english").value.trim(),
+    arabic: document.getElementById("arabic").value.trim(),
+    translit: document.getElementById("translit").value.trim(),
+    forms: readExtraFields(),
+    notes: notesInput.value.trim()
   };
 
   if (editingId) {
@@ -181,8 +181,6 @@ form.addEventListener("submit", (event) => {
     words.unshift({
       id: "w_" + Date.now(),
       ...formData,
-      forms: {},
-      notes: "",
       tags: [],
       createdAt: new Date().toISOString()
     });
@@ -230,8 +228,14 @@ filtersBox.addEventListener("click", (event) => {
   renderWords();
 });
 
+typeSelect.addEventListener("change", () => renderExtraFields(typeSelect.value));
 openAddBtn.addEventListener("click", openAdd);
 cancelBtn.addEventListener("click", () => dialog.close());
 searchInput.addEventListener("input", renderWords);
+
+// show how many items are waiting in the lesson draft
+lessonLink.textContent = lesson?.items.length
+  ? `Lesson Mode (${lesson.items.length})`
+  : "Lesson Mode";
 
 renderWords();

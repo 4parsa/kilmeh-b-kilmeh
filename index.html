@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <header class="site-header">
@@ -15,7 +15,7 @@
   </header>
 
   <nav class="site-nav">
-    <button id="lesson-mode" class="nav-btn" disabled>Lesson Mode</button>
+    <a href="lesson.html" id="lesson-link" class="nav-btn">Lesson Mode</a>
     <button id="open-add" class="nav-btn">Add word</button>
   </nav>
 
@@ -58,6 +58,11 @@
         <option value="phrase">Phrase</option>
         <option value="sentence">Sentence</option>
       </select>
+
+      <div id="extra-fields"></div>
+
+      <textarea id="notes" placeholder="Notes (optional)"></textarea>
+
       <div class="dialog-buttons">
         <button type="button" id="cancel-edit">Cancel</button>
         <button type="submit" id="submit-btn">Add word</button>
@@ -65,6 +70,7 @@
     </form>
   </dialog>
 
-  <script src="script.js?v=10"></script>
+  <script src="js/storage.js?v=1"></script>
+  <script src="js/dictionary.js?v=2"></script>
 </body>
 </html>

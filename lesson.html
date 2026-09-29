@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson Mode · كلمة بكلمة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=7">
+</head>
+<body>
+  <header class="site-header">
+    <h1 lang="ar" dir="rtl">كلمة بكلمة</h1>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-btn">Back to dictionary</a>
+  </nav>
+
+  <main>
+    <input id="lesson-name" class="lesson-name" aria-label="Lesson name">
+
+    <form id="lesson-form" class="lesson-form">
+      <input id="l-english" placeholder="English" required>
+      <input id="l-arabic" placeholder="Arabic" lang="ar" dir="rtl" required>
+      <input id="l-translit" placeholder="Transliteration (optional)">
+      <select id="l-type">
+        <option value="noun">Noun</option>
+        <option value="verb">Verb</option>
+        <option value="adjective">Adjective</option>
+        <option value="adverb">Adverb</option>
+        <option value="preposition">Preposition</option>
+        <option value="pronoun">Pronoun</option>
+        <option value="number">Number</option>
+        <option value="question">Question word</option>
+        <option value="conjunction">Conjunction</option>
+        <option value="phrase">Phrase</option>
+        <option value="sentence">Sentence</option>
+      </select>
+      <button type="submit">Add to lesson</button>
+    </form>
+
+    <h2 id="lesson-count">This lesson</h2>
+    <div id="lesson-list"></div>
+
+    <div class="lesson-actions">
+      <button type="button" id="discard-lesson">Discard lesson</button>
+      <button type="button" id="save-lesson">Add all to dictionary</button>
+    </div>
+  </main>
+
+  <script src="js/storage.js?v=1"></script>
+  <script src="js/lesson.js?v=2"></script>
+</body>
+</html>
