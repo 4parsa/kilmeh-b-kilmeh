@@ -95,7 +95,7 @@ function openEdit(id) {
   dialog.showModal();
 }
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = {
@@ -108,30 +108,32 @@ form.addEventListener("submit", (event) => {
   };
 
   if (editingId) {
-    words = words.map(word =>
-      word.id === editingId ? { ...word, ...formData } : word
-    );
+    const existing = words.find(word => word.id === editingId);
+    const updated = { ...existing, ...formData };
+    await apiUpdateWord(updated);
+    words = words.map(word => word.id === editingId ? updated : word);
   } else {
-    words.unshift({
+    const newWord = {
       id: "w_" + Date.now(),
       ...formData,
       tags: [],
       createdAt: new Date().toISOString()
-    });
+    };
+    await apiAddWord(newWord);
+    words.unshift(newWord);
   }
 
-  saveWords();
   renderWords();
   dialog.close();
 });
 
-list.addEventListener("click", (event) => {
+list.addEventListener("click", async (event) => {
   const id = event.target.dataset.id;
 
   if (event.target.classList.contains("delete-btn")) {
     if (!confirm("Delete this word?")) return;
+    await apiDeleteWord(id);
     words = words.filter(word => word.id !== id);
-    saveWords();
     renderWords();
   }
 
@@ -172,4 +174,4 @@ lessonLink.textContent = lesson?.items.length
   ? `Lesson Mode (${lesson.items.length})`
   : "Lesson Mode";
 
-renderWords();
+loadWords().then(renderWords);
