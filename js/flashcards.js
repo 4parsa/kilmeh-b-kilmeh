@@ -167,4 +167,5 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-buildSetOptions();
+// load words from the API first, then build the set list
+loadWords().then(buildSetOptions);
