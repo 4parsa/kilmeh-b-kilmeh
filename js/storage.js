@@ -45,6 +45,10 @@ async function apiAddWord(word) {
   await apiRequest("/words", { method: "POST", body: JSON.stringify(word) });
 }
 
+async function apiAddWords(list) {
+  await apiRequest("/words/batch", { method: "POST", body: JSON.stringify(list) });
+}
+
 async function apiUpdateWord(word) {
   await apiRequest(`/words/${word.id}`, { method: "PUT", body: JSON.stringify(word) });
 }
