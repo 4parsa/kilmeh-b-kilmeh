@@ -5,7 +5,7 @@
   --paper: #fff;
   --danger: #a11;
   --serif: "EB Garamond", Georgia, serif;
-  --arabic: "Amiri", "Noto Naskh Arabic", serif;
+  --arabic: -apple-system, BlinkMacSystemFont, "SF Arabic", "Segoe UI", "Noto Sans Arabic", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -222,6 +222,7 @@ main {
   color: var(--muted);
 }
 .form-arabic {
+  font-family: var(--arabic);
   font-size: 1.3rem;
 }
 
@@ -518,13 +519,6 @@ dialog h2 {
 .fc-result {
   margin: 0 0 16px;
   font-size: 1.3rem;
-}
-
-/* Arabic in the system font (SF Arabic on iPhone/Mac) */
-[lang="ar"],
-.arabic,
-.fc-arabic {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Arabic", "Segoe UI", "Noto Sans Arabic", sans-serif;
 }
 
 /* keep the fancy Amiri for the site title */
