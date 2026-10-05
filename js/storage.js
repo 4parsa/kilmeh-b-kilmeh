@@ -37,8 +37,13 @@ async function apiRequest(path, options = {}) {
 }
 
 async function loadWords() {
-  const res = await fetch(`${API_URL}/words`);
-  words = await res.json();
+  try {
+    const res = await fetch(`${API_URL}/words`);
+    if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+    words = await res.json();
+  } catch (error) {
+    alert("Couldn't load your words. The server might be down.");
+  }
 }
 
 async function apiAddWord(word) {
@@ -55,10 +60,6 @@ async function apiUpdateWord(word) {
 
 async function apiDeleteWord(id) {
   await apiRequest(`/words/${id}`, { method: "DELETE" });
-}
-
-function saveWords() {
-  localStorage.setItem("words", JSON.stringify(words));
 }
 
 function saveLesson() {
