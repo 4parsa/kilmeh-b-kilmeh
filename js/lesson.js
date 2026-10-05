@@ -100,7 +100,7 @@ lessonList.addEventListener("click", (event) => {
   renderLesson();
 });
 
-saveLessonBtn.addEventListener("click", () => {
+saveLessonBtn.addEventListener("click", async () => {
   const count = lesson.items.length;
   if (!confirm(`Add ${count} item${count === 1 ? "" : "s"} to your dictionary?`)) return;
 
@@ -115,8 +115,8 @@ saveLessonBtn.addEventListener("click", () => {
     createdAt: now
   }));
 
-  words = [...newWords, ...words];
-  saveWords();
+  // send the whole lesson to the API in one go
+  await apiAddWords(newWords);
 
   lesson = null;
   saveLesson();
